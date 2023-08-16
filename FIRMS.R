@@ -18,6 +18,11 @@ high_confidence <- subset(df, confidence>95)
 # create subset of brightest fires
 brightest <- subset(df, brightness>500)
 
+# create subset of brightest/highest confidence fires
+brightest_high_confidence <- subset(df, confidence>95 & brightness>400)
+
+# different color dot by month 
+
 # Map fires associated with an active volcano 
 mapview(volcano, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
 
@@ -30,6 +35,26 @@ mapview(high_confidence, xcol = "longitude", ycol = "latitude", crs = 4269, grid
 # Map brightest fire observations
 mapview(brightest, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
 
+# Map brightest + high confidence observations
+mapview(brightest_high_confidence, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+
+#limit to a specific lat/long area
+
+# add more descriptive data to tooltip 
+
+# diff size/color dot based on a variable 
+# https://stackoverflow.com/questions/56743265/point-color-and-symbol-size-based-on-different-variables-in-mapview
+
+#diff size dot based on brightness
+pal <-  mapviewPalette("mapviewSpectralColors")
+
+mapview(brightest_high_confidence, 
+        cex = "brightness", 
+        xcol = "longitude", ycol = "latitude", crs = 4269,
+        legend = TRUE,
+        col.regions = pal(100))  
+
 # condense dates with similar lat/long into one dot? one dot per lat/long bin per day? 
+#brightest_by_day<- energy %>% group_by(datetime) %>% summarise(sum =sum(value)) )
 
 #combine frp and brightness? by percentile, rather than hard number 
