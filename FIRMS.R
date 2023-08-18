@@ -24,19 +24,67 @@ brightest_high_confidence <- subset(df, confidence>95 & brightness>400)
 # different color dot by month 
 
 # Map fires associated with an active volcano 
-mapview(volcano, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+mapview(
+  volcano
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+  )
 
 # Map most intense fires by FRP (Fire Radiative Power, in megawatts)
-mapview(frp, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+mapview(
+  frp
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+  )
 
 # Map observations most likely to be fires
-mapview(high_confidence, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+mapview(
+  high_confidence
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+  )
 
 # Map brightest fire observations
-mapview(brightest, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+mapview(
+  brightest
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+  )
+
+pal = mapviewPalette("mapviewTopoColors")
+pal2 <-  mapviewPalette("mapviewSpectralColors")
 
 # Map brightest + high confidence observations
-mapview(brightest_high_confidence, xcol = "longitude", ycol = "latitude", crs = 4269, grid = FALSE)
+# cex changes dot size based on a variable
+
+library(leafpop) 
+
+mapview(
+  brightest_high_confidence
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , zcol = "brightness"
+  , crs = 4269
+  , cex = "brightness"
+  , col.regions = pal(100), at = seq(500, 1000, 100)
+  , grid = FALSE
+  , popup = popupTable(brightest_high_confidence,
+               zcol = c("brightness",
+                        "frp"
+                        )
+                      )
+  )
+
+# view options
+#https://r-spatial.github.io/mapview/articles/mapview_03-options.html
 
 #limit to a specific lat/long area
 
@@ -46,13 +94,9 @@ mapview(brightest_high_confidence, xcol = "longitude", ycol = "latitude", crs = 
 # https://stackoverflow.com/questions/56743265/point-color-and-symbol-size-based-on-different-variables-in-mapview
 
 #diff size dot based on brightness
-pal <-  mapviewPalette("mapviewSpectralColors")
 
-mapview(brightest_high_confidence, 
-        cex = "brightness", 
-        xcol = "longitude", ycol = "latitude", crs = 4269,
-        legend = TRUE,
-        col.regions = pal(100))  
+
+
 
 # condense dates with similar lat/long into one dot? one dot per lat/long bin per day? 
 #brightest_by_day<- energy %>% group_by(datetime) %>% summarise(sum =sum(value)) )
