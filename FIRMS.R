@@ -21,6 +21,10 @@ brightest <- subset(df, brightness>500)
 # create subset of brightest/highest confidence fires
 brightest_high_confidence <- subset(df, confidence>95 & brightness>400)
 
+alaska <-subset(df, latitude>59 & longitude< -145)
+
+summary(df)
+
 # different color dot by month 
 
 # Map fires associated with an active volcano 
@@ -59,8 +63,10 @@ mapview(
   , grid = FALSE
   )
 
+
 pal = mapviewPalette("mapviewTopoColors")
 pal2 <-  mapviewPalette("mapviewSpectralColors")
+
 
 # Map brightest + high confidence observations
 # cex changes dot size based on a variable
@@ -83,10 +89,21 @@ mapview(
                       )
   )
 
+
+#limit to a specific lat/long area
+
+# Map observations in Alaska
+mapview(
+  alaska
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+)
+
 # view options
 #https://r-spatial.github.io/mapview/articles/mapview_03-options.html
 
-#limit to a specific lat/long area
 
 # add more descriptive data to tooltip 
 
