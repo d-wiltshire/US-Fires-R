@@ -119,3 +119,25 @@ mapview(
 #brightest_by_day<- energy %>% group_by(datetime) %>% summarise(sum =sum(value)) )
 
 #combine frp and brightness? by percentile, rather than hard number 
+
+# it's likely many fires are reported multiple times; goal is to take brightest fire by day by lat/long bin
+
+library(dplyr)
+
+#perform binning with specific number of bins
+df_latbreaks <- df %>% mutate(newlat_bin = cut(latitude, breaks=500))
+df_latlongbreaks <- df_latbreaks %>% mutate(newlong_bin = cut(longitude, breaks=500))
+df_latlongbreaks$geog_bin <- with(df_latlongbreaks, c("newlat_bin", "newlong_bin"))
+
+#check on why not filtering
+df_binned <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
+df_binned %>% filter(brightness == max(brightness) )
+
+mapview(
+  df_binned
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+)
+
