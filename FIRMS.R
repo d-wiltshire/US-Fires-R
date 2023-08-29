@@ -1,3 +1,5 @@
+#Set working directory to source file location
+
 df<-read.csv("modis_2022_all_countries\\modis\\2022\\Countries\\modis_2022_United_States.csv")
 
 head(df)
@@ -122,22 +124,46 @@ mapview(
 
 # it's likely many fires are reported multiple times; goal is to take brightest fire by day by lat/long bin
 
-library(dplyr)
-
 #perform binning with specific number of bins
 df_latbreaks <- df %>% mutate(newlat_bin = cut(latitude, breaks=500))
 df_latlongbreaks <- df_latbreaks %>% mutate(newlong_bin = cut(longitude, breaks=500))
 df_latlongbreaks$geog_bin <- with(df_latlongbreaks, c("newlat_bin", "newlong_bin"))
 
-#check on why not filtering
-df_binned <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
-df_binned %>% filter(brightness == max(brightness) )
+#Find brightest per geographical bin -- why does geog bin produce different results than newlat and new long bins?
+#df_brightest_geog <- df_latlongbreaks %>% group_by(newlat_bin, newlong_bin, acq_date)
+df_brightest_geog <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
+df_brightest_geog <- df_brightest_geog %>% filter(brightness == max(brightness))
+#the line above can create duplicates where day and brightness are the same; see Hawaii
 
 mapview(
-  df_binned
+  df_brightest_geog
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , crs = 4269
+  , grid = FALSE
+  , popup = popupTable(df_brightest_geog,
+                       zcol = c("brightness",
+                                "acq_date"
+                       )
+  )
+)
+
+
+
+#Group by geographic "bin" and date
+df_binned <- df_latlongbreaks %>% group_by(newlat_bin, newlong_bin, acq_date)
+
+#Filter 
+df_binned_brightness <- df_binned %>% filter(brightness > 500 )
+
+mapview(
+  df_binned_brightness
   , xcol = "longitude"
   , ycol = "latitude"
   , crs = 4269
   , grid = FALSE
 )
 
+
+
+#ID and graph days/months of the year with the most reported fires
