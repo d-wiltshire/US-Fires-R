@@ -7,6 +7,8 @@ head(df)
 library(tidyverse)
 library(sf)
 library(mapview)
+library(leafpop) 
+library(lubridate)
 
 # create subset of df of only active volcano fires
 volcano <- subset(df, type==1)
@@ -73,7 +75,6 @@ pal2 <-  mapviewPalette("mapviewSpectralColors")
 # Map brightest + high confidence observations
 # cex changes dot size based on a variable
 
-library(leafpop) 
 
 mapview(
   brightest_high_confidence
@@ -129,17 +130,21 @@ df_latbreaks <- df %>% mutate(newlat_bin = cut(latitude, breaks=500))
 df_latlongbreaks <- df_latbreaks %>% mutate(newlong_bin = cut(longitude, breaks=500))
 df_latlongbreaks$geog_bin <- with(df_latlongbreaks, c("newlat_bin", "newlong_bin"))
 
-#Find brightest per geographical bin -- why does geog bin produce different results than newlat and new long bins?
+#Find brightest per geographical bin and day (i.e., one dot per geog bin per day, selecting out the highest brightness reading )
+# Why does geog bin produce different results than newlat and new long bins?
 #df_brightest_geog <- df_latlongbreaks %>% group_by(newlat_bin, newlong_bin, acq_date)
 df_brightest_geog <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
 df_brightest_geog <- df_brightest_geog %>% filter(brightness == max(brightness))
-#the line above can create duplicates where day and brightness are the same; see Hawaii
+# The line above can create duplicates where day and brightness are the same; see Hawaii
 
 mapview(
   df_brightest_geog
   , xcol = "longitude"
   , ycol = "latitude"
+  , zcol = "brightness"
   , crs = 4269
+  , cex = "brightness"
+  , col.regions = pal2(100), at = seq(300, 800, 100)
   , grid = FALSE
   , popup = popupTable(df_brightest_geog,
                        zcol = c("brightness",
@@ -167,3 +172,16 @@ mapview(
 
 
 #ID and graph days/months of the year with the most reported fires
+#Add Canada data to source file 
+
+
+#the following lines do not work but were an attempt to change data type to date
+df$acq_date2 <-ymd(df$acq_date, "%Y-%m-%d")
+#the following line does not reveal the NAN at either the beginning or end of the list
+sort(df$acq_date,decreasing=FALSE)
+which(df$acq_date!="____-__-__")
+plot(df$acq_date %>% count(df$acq_date))
+
+#begin working code
+count_by_day <- df %>% count(acq_date)
+barplot(count_by_day$n)
