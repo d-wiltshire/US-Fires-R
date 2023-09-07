@@ -171,17 +171,37 @@ mapview(
 
 
 
-#ID and graph days/months of the year with the most reported fires
+
 #Add Canada data to source file 
 
+# ID and graph days/months of the year with the most reported fires:
 
-#the following lines do not work but were an attempt to change data type to date
-df$acq_date2 <-ymd(df$acq_date, "%Y-%m-%d")
-#the following line does not reveal the NAN at either the beginning or end of the list
-sort(df$acq_date,decreasing=FALSE)
-which(df$acq_date!="____-__-__")
-plot(df$acq_date %>% count(df$acq_date))
+# Create data datatype (acq_date previously stored as character)
+df$acq_date2 <-ymd(df$acq_date)
 
-#begin working code
+#Show simple bar plot of daily frequencies
 count_by_day <- df %>% count(acq_date)
 barplot(count_by_day$n)
+
+# View histogram by month
+hist(df$acq_date2, breaks = 12)
+
+# Separate date column into month and year columns
+df <- df %>% 
+  mutate(year=lubridate::year(df$acq_date2),
+         month=lubridate::month(df$acq_date2),
+         month_name=month.name[lubridate::month(df$acq_date2)])
+
+count_by_month <- df %>% count(month_name)
+barplot(count_by_month$n)
+
+#Barplot with parameters
+barplot(count_by_month$n,
+        main = "Count by Month",
+        xlab = "Month",
+        ylab = "Count",
+        names.arg = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"),
+        col = "blue",
+        horiz = FALSE)
+
+
