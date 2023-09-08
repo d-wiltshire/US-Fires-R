@@ -204,4 +204,24 @@ barplot(count_by_month$n,
         col = "blue",
         horiz = FALSE)
 
+# July has highest total of the 12 months; investigate further 
+# Surprising tendency of lower-brightness fires toward southeast region
+july <- df %>% filter(month_name=="July")
 
+mapview(
+  july
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , zcol = "brightness"
+  , crs = 4269
+  , cex = "brightness"
+  , col.regions = pal2(100), at = seq(100, 800, 100)
+  , grid = FALSE
+  , popup = popupTable(july,
+                       zcol = c("brightness",
+                                "acq_date"
+                       )
+  )
+)
+
+#Color dot based on month to see whether there are trends associated with time of year (summer, Southeast; winter, west, etc.)
