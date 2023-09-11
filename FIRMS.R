@@ -137,6 +137,9 @@ df_brightest_geog <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
 df_brightest_geog <- df_brightest_geog %>% filter(brightness == max(brightness))
 # The line above can create duplicates where day and brightness are the same; see Hawaii
 
+# Export CSV
+write.csv(df_brightest_geog, "df_brightest_geog.csv", row.names=FALSE)
+
 mapview(
   df_brightest_geog
   , xcol = "longitude"
@@ -194,6 +197,9 @@ df <- df %>%
 
 count_by_month <- df %>% count(month_name)
 barplot(count_by_month$n)
+
+#Export count_by_month for viz?
+write.csv(count_by_month, "count_by_month.csv", row.names=FALSE)
 
 #Barplot with parameters
 barplot(count_by_month$n,
