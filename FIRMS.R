@@ -132,8 +132,8 @@ df_latlongbreaks$geog_bin <- with(df_latlongbreaks, c("newlat_bin", "newlong_bin
 
 #Find brightest per geographical bin and day (i.e., one dot per geog bin per day, selecting out the highest brightness reading )
 # Why does geog bin produce different results than newlat and new long bins?
-#df_brightest_geog <- df_latlongbreaks %>% group_by(newlat_bin, newlong_bin, acq_date)
-df_brightest_geog <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
+df_brightest_geog <- df_latlongbreaks %>% group_by(newlat_bin, newlong_bin, acq_date)
+#df_brightest_geog <- df_latlongbreaks %>% group_by(geog_bin, acq_date)
 df_brightest_geog <- df_brightest_geog %>% filter(brightness == max(brightness))
 # The line above can create duplicates where day and brightness are the same; see Hawaii
 
@@ -175,7 +175,7 @@ mapview(
 
 
 
-#Add Canada data to source file 
+#Add Canada, Mexico data to source file 
 
 # ID and graph days/months of the year with the most reported fires:
 
@@ -190,12 +190,12 @@ barplot(count_by_day$n)
 hist(df$acq_date2, breaks = 12)
 
 # Separate date column into month and year columns
-df <- df %>% 
+df_months <- df %>% 
   mutate(year=lubridate::year(df$acq_date2),
          month=lubridate::month(df$acq_date2),
          month_name=month.name[lubridate::month(df$acq_date2)])
 
-count_by_month <- df %>% count(month_name)
+count_by_month <- df_months %>% count(month_name)
 barplot(count_by_month$n)
 
 #Export count_by_month for viz?
@@ -231,3 +231,27 @@ mapview(
 )
 
 #Color dot based on month to see whether there are trends associated with time of year (summer, Southeast; winter, west, etc.)
+
+# Prepare brightest_high_confidence for use visualizing over months 
+bhc_months <- brightest_high_confidence %>% 
+  mutate(year=lubridate::year(brightest_high_confidence$acq_date2),
+         month=lubridate::month(brightest_high_confidence$acq_date2),
+         month_name=month.name[lubridate::month(brightest_high_confidence$acq_date2)])
+
+mapview(
+  bhc_months
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , zcol = "month"
+  , crs = 4269
+  , cex = "brightness"
+  , col.regions = viridis::viridis(12, direction=-1)
+  , grid = FALSE
+  , popup = popupTable(july,
+                       zcol = c("brightness",
+                                "acq_date",
+                                "month_name"
+                       )
+  )
+)
+#This map demonstrates that the brightest fires are winter fires in the west and PNW, and these trend toward summer/fall; the brightest fires in the middle of the country trend toward spring 
