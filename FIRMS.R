@@ -1,6 +1,11 @@
 #Set working directory to source file location
 
-df<-read.csv("modis_2022_all_countries\\modis\\2022\\Countries\\modis_2022_United_States.csv")
+df_us<-read.csv("modis_2022_all_countries\\modis\\2022\\Countries\\modis_2022_United_States.csv")
+
+df_canada<-read.csv("modis_2022_all_countries\\modis\\2022\\Countries\\modis_2022_Canada.csv")
+
+#Combine US and Canada datasets
+df <- rbind(df_us, df_canada)
 
 head(df)
 
@@ -212,7 +217,7 @@ barplot(count_by_month$n,
 
 # July has highest total of the 12 months; investigate further 
 # Surprising tendency of lower-brightness fires toward southeast region
-july <- df %>% filter(month_name=="July")
+july <- df_months %>% filter(month_name=="July")
 
 mapview(
   july
@@ -231,6 +236,9 @@ mapview(
 )
 
 #Color dot based on month to see whether there are trends associated with time of year (summer, Southeast; winter, west, etc.)
+
+# Create data datatype for brightest_high_confidence (acq_date prev stored as char)
+brightest_high_confidence$acq_date2 <-ymd(brightest_high_confidence$acq_date)
 
 # Prepare brightest_high_confidence for use visualizing over months 
 bhc_months <- brightest_high_confidence %>% 
