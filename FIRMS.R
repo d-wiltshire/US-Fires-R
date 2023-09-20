@@ -246,6 +246,9 @@ bhc_months <- brightest_high_confidence %>%
          month=lubridate::month(brightest_high_confidence$acq_date2),
          month_name=month.name[lubridate::month(brightest_high_confidence$acq_date2)])
 
+#Export for viz
+write.csv(bhc_months, "bhc_months.csv", row.names=FALSE)
+
 mapview(
   bhc_months
   , xcol = "longitude"
