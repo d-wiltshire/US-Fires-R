@@ -22,8 +22,8 @@ Mapping sightings with confidence>95 & brightness>400, by month of year
 
 Number of sightings per month (all sightings)
 
-![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/942d3c3d-88d4-4921-8317-3cc33150b767)
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/59070af8-0ad7-4cdf-afad-cf322b113997)
 
-![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/7b5693b0-c4f4-4ffc-be03-71e89613e546)
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/96e03270-491d-415c-af66-317d72ad3d4c)
 
 
