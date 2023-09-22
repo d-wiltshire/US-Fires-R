@@ -201,7 +201,7 @@ df_months <- df %>%
          month_name=month.name[lubridate::month(df$acq_date2)])
 
 count_by_month <- df_months %>% count(month_name)
-barplot(count_by_month$n)
+barplot(count_by_month$n, names.arg = count_by_month$month_name)
 
 #Export count_by_month for viz?
 write.csv(count_by_month, "count_by_month.csv", row.names=FALSE)
