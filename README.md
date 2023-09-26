@@ -29,6 +29,13 @@ Number of sightings per month (all sightings)
 ![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/733791b0-ee68-4d8e-a789-258f5e528c95)
 
 
+All sightings in the month of July (brightness = color/size)
+
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/0a5415db-42b9-4b63-bbab-038a3fc2c85e)
+
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/8e9441db-2d1e-493d-a2c7-cea75f699ce5)
+
+
 
 
 
