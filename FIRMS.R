@@ -130,6 +130,11 @@ mapview(
 
 # it's likely many fires are reported multiple times; goal is to take brightest fire by day by lat/long bin
 
+
+# ----------------------------------- 
+# Binning by geographical location
+
+
 #perform binning with specific number of bins
 df_latbreaks <- df %>% mutate(newlat_bin = cut(latitude, breaks=500))
 df_latlongbreaks <- df_latbreaks %>% mutate(newlong_bin = cut(longitude, breaks=500))
@@ -178,11 +183,10 @@ mapview(
 )
 
 
+# ----------------------------------- 
+# Counting by Month
 
-
-#Add Canada, Mexico data to source file 
-
-# ID and graph days/months of the year with the most reported fires:
+# Goal: ID and graph days/months of the year with the most reported fires
 
 # Create data datatype (acq_date previously stored as character)
 df$acq_date2 <-ymd(df$acq_date)
@@ -194,6 +198,9 @@ barplot(count_by_day$n)
 # View histogram by month
 hist(df$acq_date2, breaks = 12)
 
+# ----------------------------------- 
+# Barplot: Count by Month
+
 # Separate date column into month and year columns
 df_months <- df %>% 
   mutate(year=lubridate::year(df$acq_date2),
@@ -201,12 +208,14 @@ df_months <- df %>%
          month_name=month.name[lubridate::month(df$acq_date2)])
 
 count_by_month <- df_months %>% count(month)
+
+#Simple barplot with month numbers as x-axis values
 barplot(count_by_month$n, names.arg = count_by_month$month)
 
-#Export count_by_month for viz?
+#Export count_by_month for viz
 write.csv(count_by_month, "count_by_month.csv", row.names=FALSE)
 
-#Barplot with parameters
+#Barplot with additional parameters
 barplot(count_by_month$n,
         main = "Count by Month",
         xlab = "Month",
@@ -217,6 +226,13 @@ barplot(count_by_month$n,
 
 # July has highest total of the 12 months; investigate further 
 # Surprising tendency of lower-brightness fires toward southeast region
+
+
+# ----------------------------------- 
+# Visualizing July fires
+
+# Goal: Learn more about July fires, since July has highest total of the 12 months
+
 july <- df_months %>% filter(month_name=="July")
 
 mapview(
@@ -235,7 +251,12 @@ mapview(
   )
 )
 
-#Color dot based on month to see whether there are trends associated with time of year (summer, Southeast; winter, west, etc.)
+
+# ----------------------------------- 
+# Coloring by Month using brightest_high_confidence
+
+# Goal: Color dot based on month to see whether there are trends associated with time of year (summer, Southeast; winter, west, etc.)
+
 
 # Create data datatype for brightest_high_confidence (acq_date prev stored as char)
 brightest_high_confidence$acq_date2 <-ymd(brightest_high_confidence$acq_date)
