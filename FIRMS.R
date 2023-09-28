@@ -15,26 +15,24 @@ library(mapview)
 library(leafpop) 
 library(lubridate)
 
-# create subset of df of only active volcano fires
+# Create subset of df of only active volcano fires
 volcano <- subset(df, type==1)
 
-# create subset of df of most powerful fires
+# Create subset of df of most powerful fires
 frp <- subset(df, frp>700)
 
-# create subset of data most likely to be fires
+# Create subset of data most likely to be fires
 high_confidence <- subset(df, confidence>95)
 
-# create subset of brightest fires
+# Create subset of brightest fires
 brightest <- subset(df, brightness>500)
 
-# create subset of brightest/highest confidence fires
+# Create subset of brightest/highest confidence fires
 brightest_high_confidence <- subset(df, confidence>95 & brightness>400)
 
+# Create subset with Alaska fires
 alaska <-subset(df, latitude>59 & longitude< -145)
 
-summary(df)
-
-# different color dot by month 
 
 # Map fires associated with an active volcano 
 mapview(
@@ -72,14 +70,13 @@ mapview(
   , grid = FALSE
   )
 
-
+# Establish variables for mapview color palettes
 pal = mapviewPalette("mapviewTopoColors")
-pal2 <-  mapviewPalette("mapviewSpectralColors")
+pal2 = mapviewPalette("mapviewSpectralColors")
 
 
 # Map brightest + high confidence observations
-# cex changes dot size based on a variable
-
+# Note: cex changes dot size based on a variable
 
 mapview(
   brightest_high_confidence
@@ -97,8 +94,6 @@ mapview(
                       )
   )
 
-
-#limit to a specific lat/long area
 
 # Map observations in Alaska
 mapview(
@@ -118,7 +113,7 @@ mapview(
 # diff size/color dot based on a variable 
 # https://stackoverflow.com/questions/56743265/point-color-and-symbol-size-based-on-different-variables-in-mapview
 
-#diff size dot based on brightness
+
 
 
 
@@ -288,3 +283,23 @@ mapview(
   )
 )
 #This map demonstrates that the brightest fires are winter fires in the west and PNW, and these trend toward summer/fall; the brightest fires in the middle of the country trend toward spring 
+
+
+# Visualize which fires are being picked up by each of the two satellites (i.e., Aqua and Terra)
+
+mapview(
+  brightest_high_confidence
+  , xcol = "longitude"
+  , ycol = "latitude"
+  , zcol = "satellite"
+  , crs = 4269
+  #, cex = "brightness"
+  , col.regions = viridis::viridis(2, direction=-1)
+  , grid = FALSE
+  #, popup = popupTable(brightest_high_confidence,
+                       #zcol = c("brightness",
+                              #  "acq_date"
+                                #"month_name"
+                       #)
+  #)
+)
