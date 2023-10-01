@@ -303,3 +303,21 @@ mapview(
                        #)
   #)
 )
+
+#--------------------------
+# Histogram of confidence levels of all df sightings
+
+df_confidence_bins <- df %>% mutate(confidence_bin = cut(confidence, breaks=10))
+
+count_by_confbins<- df_confidence_bins %>% count(confidence_bin)
+
+count_by_confbins
+
+#Barplot with additional parameters
+barplot(count_by_confbins$n,
+        main = "Confidence Bins",
+        xlab = "x",
+        ylab = "Count",
+        names.arg = c("0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "91-100"),
+        col = "blue",
+        horiz = FALSE)
