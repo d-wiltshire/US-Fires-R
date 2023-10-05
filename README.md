@@ -36,6 +36,13 @@ All sightings in the month of July (brightness = color/size)
 ![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/8e9441db-2d1e-493d-a2c7-cea75f699ce5)
 
 
+All sightings, grouped into bins by sighting confidence level (1-100 scale)
+
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/699526b8-4e92-4035-aab7-6f2858d8fcb7)
+
+![image](https://github.com/d-wiltshire/US-Fires-R/assets/100863488/c0b89c9c-b77e-4ef9-8d0e-9197369b6a8f)
+
+
 
 
 
